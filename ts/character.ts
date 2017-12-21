@@ -8,8 +8,10 @@ class Character extends GameItem {
     * @param {number} - xPosition
     * @param {number} - yPosition
     */
-    constructor(name: string, colour: string, xPosition: number = 0, yPosition: number = 0) {
-        super(name, colour, xPosition, yPosition);
+    constructor(radius:number, colour: string, xPosition: number = 0, yPosition: number = 0, xVelocity: number, yVelocity: number) {
+        super(radius, colour, xPosition, yPosition, xVelocity, yVelocity);
     }
+
+    
 
 }  

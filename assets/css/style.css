@@ -1,14 +1,16 @@
-html {
-  box-sizing: border-box;
-  font-size: 10px;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-#container{
-  width: 100%;
+html, body {
+  margin: 0;
+  overflow: hidden;
   height: 100vh;
+}
+
+ #playingField{
   background: black;
+}
+
+.orb{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
 }

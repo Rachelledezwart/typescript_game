@@ -12,7 +12,6 @@ const app : any = {};
     let init = function ()
     {
         app.game = new Game();
-        app.game.start(); //only fired once
     };
 
     window.addEventListener('load', init);
