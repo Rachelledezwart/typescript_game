@@ -11,7 +11,15 @@ class Character extends GameItem {
         constructor(radius:number, colour: string, xPosition: number = 0, yPosition: number = 0) {
             super(radius, colour, xPosition, yPosition);
         }
-    
+
+        public set SetPositionX(xPos: number){
+            this._xPos = xPos;
+        }
+
+        public set SetPositionY(yPos: number){
+            this._yPos = yPos;
+        }
+        
         /**
         * Function to update the state of the GameItem in the DOM
         */    

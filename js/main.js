@@ -21,6 +21,27 @@ var GameItem = (function () {
         this._xPos = xPosition;
         this._yPos = yPosition;
     }
+    Object.defineProperty(GameItem.prototype, "xPosition", {
+        get: function () {
+            return this._xPos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameItem.prototype, "yPosition", {
+        get: function () {
+            return this._yPos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameItem.prototype, "radius", {
+        get: function () {
+            return this._radius;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return GameItem;
 }());
 var Character = (function (_super) {
@@ -30,6 +51,20 @@ var Character = (function (_super) {
         if (yPosition === void 0) { yPosition = 0; }
         return _super.call(this, radius, colour, xPosition, yPosition) || this;
     }
+    Object.defineProperty(Character.prototype, "SetPositionX", {
+        set: function (xPos) {
+            this._xPos = xPos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Character.prototype, "SetPositionY", {
+        set: function (yPos) {
+            this._yPos = yPos;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Character.prototype.draw = function () {
         this.context.beginPath();
         this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
@@ -45,16 +80,41 @@ var Game = (function () {
         var _this = this;
         this.canvas = document.querySelector('canvas');
         this.context = this.canvas.getContext('2d');
+        this.keys = [];
         this.gameLoop = function () {
             requestAnimationFrame(_this.gameLoop);
+            var movementSpeed = 10;
+            if (_this.keys[65] && _this._player.xPosition - _this._player.radius > 0) {
+                _this._player.SetPositionX = _this._player.xPosition - movementSpeed;
+            }
+            if (_this.keys[68] && _this._player.xPosition + _this._player.radius < innerWidth) {
+                _this._player.SetPositionX = _this._player.xPosition + movementSpeed;
+            }
+            if (_this.keys[83] && _this._player.yPosition + _this._player.radius < innerHeight) {
+                _this._player.SetPositionY = _this._player.yPosition + movementSpeed;
+            }
+            if (_this.keys[87] && _this._player.yPosition - _this._player.radius > 0) {
+                _this._player.SetPositionY = _this._player.yPosition - movementSpeed;
+            }
             _this.update();
         };
-        this._bouncer = new Array();
-        this._player = new Character(10, "#912F40", 10, 10);
+        var playerRadius = 20;
+        this._projectiles = new Array();
+        this._player = new Character(playerRadius, "#912F40", window.innerWidth / 2 - playerRadius / 2, window.innerHeight / 2 - playerRadius / 2);
+        window.addEventListener('keydown', function (e) {
+            _this.keys[e.keyCode] = true;
+        });
+        window.addEventListener('keyup', function (e) {
+            _this.keys[e.keyCode] = false;
+        });
         this.setCanvasSize();
         this.draw();
         this.gameLoop();
     }
+    Game.prototype.setCanvasSize = function () {
+        this.canvas.width = document.body.clientWidth;
+        this.canvas.height = document.body.clientHeight;
+    };
     Game.prototype.draw = function () {
         var _this = this;
         var radius = 25;
@@ -62,22 +122,27 @@ var Game = (function () {
         var yPos = Math.random() * (innerHeight - radius * 2) + radius;
         var xVel = (Math.random() - 0.5) * 10;
         var yVel = (Math.random() - 0.5) * 10;
-        this._bouncer.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
+        if (this.distance(xPos, yPos) < radius + this._player.radius + 30) {
+            xPos = Math.random() * (innerWidth - radius * 2) + radius;
+            yPos = Math.random() * (innerHeight - radius * 2) + radius;
+        }
+        this._projectiles.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
         setTimeout(function () {
             _this.draw();
         }, 5000);
     };
     Game.prototype.update = function () {
         this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        this._bouncer.map(function (bouncer) {
-            bouncer.draw();
-            bouncer.update();
+        this._projectiles.map(function (projectile) {
+            projectile.draw();
+            projectile.update();
         });
         this._player.draw();
     };
-    Game.prototype.setCanvasSize = function () {
-        this.canvas.width = document.body.clientWidth;
-        this.canvas.height = document.body.clientHeight;
+    Game.prototype.distance = function (xPos, yPos) {
+        var xDistance = xPos - this._player.xPosition;
+        var yDistance = yPos - this._player.yPosition;
+        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
     };
     return Game;
 }());
@@ -113,6 +178,10 @@ var Projectile = (function (_super) {
         }
         this._xPos += this._xVel;
         this._yPos += this._yVel;
+    };
+    Projectile.prototype.bounce = function () {
+        this._xVel = -this._xVel;
+        this._yVel = -this._yVel;
     };
     return Projectile;
 }(GameItem));

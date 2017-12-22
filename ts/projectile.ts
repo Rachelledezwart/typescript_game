@@ -41,5 +41,11 @@ class Projectile extends GameItem {
 
         this._xPos += this._xVel;
         this._yPos += this._yVel;
+        
+    }
+
+    public bounce(): void{
+        this._xVel = -this._xVel;
+        this._yVel = -this._yVel;
     }
 }  

@@ -21,4 +21,16 @@ class GameItem {
         this._xPos = xPosition;
         this._yPos = yPosition;
     }
+
+    public get xPosition(){
+        return this._xPos;
+    }
+
+    public get yPosition(){
+        return this._yPos;
+    }
+
+    public get radius(){
+        return this._radius;
+    }
 }
