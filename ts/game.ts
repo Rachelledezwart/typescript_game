@@ -1,12 +1,14 @@
 class Game {
-    private canvas = <HTMLCanvasElement> document.querySelector('canvas');
-    private context: CanvasRenderingContext2D = this.canvas.getContext('2d');
+    protected canvas = <HTMLCanvasElement> document.querySelector('canvas');
+    protected context: CanvasRenderingContext2D = this.canvas.getContext('2d');
     
-    private _bouncer: Array<GameItem>;
+    private _bouncer: Array<Projectile>;
+    private _player: Character; 
     
     constructor(){
         //create some gameItems
         this._bouncer = new Array(); 
+        this._player = new Character(10, "#912F40", 10, 10);
 
         //add keydown handler to the window object
         
@@ -14,7 +16,7 @@ class Game {
         //draw is initial state
         this.setCanvasSize();
 
-        //summon more circles the long the game goes on
+        //summon more circles the long the game goes ons
         this.draw();
 
         //start the game
@@ -40,7 +42,7 @@ class Game {
         let xVel = (Math.random() - 0.5) * 10;
         let yVel = (Math.random() - 0.5) * 10;
 
-        this._bouncer.push(new GameItem(radius, '#702632', xPos, yPos, xVel, yVel));
+        this._bouncer.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
         
         setTimeout(() => {
             this.draw();
@@ -57,6 +59,8 @@ class Game {
             bouncer.draw();
             bouncer.update();
         })
+        
+        this._player.draw();
         
     }
 

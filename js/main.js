@@ -9,7 +9,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var GameItem = (function () {
-    function GameItem(radius, colour, xPosition, yPosition, xVelocity, yVelocity) {
+    function GameItem(radius, colour, xPosition, yPosition) {
         if (radius === void 0) { radius = 10; }
         if (colour === void 0) { colour = '#5E0028'; }
         if (xPosition === void 0) { xPosition = 0; }
@@ -20,34 +20,24 @@ var GameItem = (function () {
         this._colour = colour;
         this._xPos = xPosition;
         this._yPos = yPosition;
-        this._xVel = xVelocity;
-        this._yVel = yVelocity;
     }
-    GameItem.prototype.draw = function () {
-        this.context.beginPath();
-        this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
-        this.context.strokeStyle = this._colour;
-        this.context.stroke();
-    };
-    GameItem.prototype.update = function () {
-        if (this._xPos + this._radius > innerWidth || this._xPos - this._radius < 0) {
-            this._xVel = -this._xVel;
-        }
-        if (this._yPos + this._radius > innerHeight || this._yPos - this._radius < 0) {
-            this._yVel = -this._yVel;
-        }
-        this._xPos += this._xVel;
-        this._yPos += this._yVel;
-    };
     return GameItem;
 }());
 var Character = (function (_super) {
     __extends(Character, _super);
-    function Character(radius, colour, xPosition, yPosition, xVelocity, yVelocity) {
+    function Character(radius, colour, xPosition, yPosition) {
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
-        return _super.call(this, radius, colour, xPosition, yPosition, xVelocity, yVelocity) || this;
+        return _super.call(this, radius, colour, xPosition, yPosition) || this;
     }
+    Character.prototype.draw = function () {
+        this.context.beginPath();
+        this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
+        this.context.strokeStyle = this._colour;
+        this.context.fillStyle = this._colour;
+        this.context.stroke();
+        this.context.fill();
+    };
     return Character;
 }(GameItem));
 var Game = (function () {
@@ -60,6 +50,7 @@ var Game = (function () {
             _this.update();
         };
         this._bouncer = new Array();
+        this._player = new Character(10, "#912F40", 10, 10);
         this.setCanvasSize();
         this.draw();
         this.gameLoop();
@@ -71,7 +62,7 @@ var Game = (function () {
         var yPos = Math.random() * (innerHeight - radius * 2) + radius;
         var xVel = (Math.random() - 0.5) * 10;
         var yVel = (Math.random() - 0.5) * 10;
-        this._bouncer.push(new GameItem(radius, '#702632', xPos, yPos, xVel, yVel));
+        this._bouncer.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
         setTimeout(function () {
             _this.draw();
         }, 5000);
@@ -82,6 +73,7 @@ var Game = (function () {
             bouncer.draw();
             bouncer.update();
         });
+        this._player.draw();
     };
     Game.prototype.setCanvasSize = function () {
         this.canvas.width = document.body.clientWidth;
@@ -96,6 +88,34 @@ var app = {};
     };
     window.addEventListener('load', init);
 })();
+var Projectile = (function (_super) {
+    __extends(Projectile, _super);
+    function Projectile(radius, colour, xPosition, yPosition, xVelocity, yVelocity) {
+        if (xPosition === void 0) { xPosition = 0; }
+        if (yPosition === void 0) { yPosition = 0; }
+        var _this = _super.call(this, radius, colour, xPosition, yPosition) || this;
+        _this._xVel = xVelocity;
+        _this._yVel = yVelocity;
+        return _this;
+    }
+    Projectile.prototype.draw = function () {
+        this.context.beginPath();
+        this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
+        this.context.strokeStyle = this._colour;
+        this.context.stroke();
+    };
+    Projectile.prototype.update = function () {
+        if (this._xPos + this._radius > innerWidth || this._xPos - this._radius < 0) {
+            this._xVel = -this._xVel;
+        }
+        if (this._yPos + this._radius > innerHeight || this._yPos - this._radius < 0) {
+            this._yVel = -this._yVel;
+        }
+        this._xPos += this._xVel;
+        this._yPos += this._yVel;
+    };
+    return Projectile;
+}(GameItem));
 var Scoreboard = (function () {
     function Scoreboard() {
     }
