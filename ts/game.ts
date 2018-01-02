@@ -39,6 +39,7 @@ class Game {
         let movementSpeed = 10;
 
         if (this.keys[65] && this._player.xPosition - this._player.radius > 0) {
+            
             this._player.SetPositionX = this._player.xPosition - movementSpeed;
         }
 
@@ -75,7 +76,7 @@ class Game {
         let xVel = (Math.random() - 0.5) * 10;
         let yVel = (Math.random() - 0.5) * 10;
 
-        if(this.distance(xPos, yPos) < radius + this._player.radius + 30){
+        if(this.distance(xPos, yPos, this._player) < radius + this._player.radius + 30){
             xPos = Math.random() * (innerWidth - radius * 2) + radius;
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
@@ -94,16 +95,31 @@ class Game {
         this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
         
         this._projectiles.map((projectile) => {
-            projectile.draw();
+            projectile.draw();  
             projectile.update();
-        })
+        });
         
+        this.checkCollision();
+        this._player.drawHealth();
         this._player.draw();
     }
+
+    public checkCollision(){
+        this._projectiles.map((projectile, index) => {
+            let distance = this.distance(projectile.xPosition, projectile.yPosition, this._player);
+
+            if(distance < projectile.radius + this._player.radius){
+                console.log("Collision");
+                this._projectiles.splice(index, 1);
+                this._player.SetHealth = this._player.health - 1; 
+            }
+
+        });
+    }
     
-    public distance(xPos: number, yPos: number){
-        let xDistance = xPos - this._player.xPosition;
-        let yDistance = yPos - this._player.yPosition;
+    public distance(xPos: number, yPos: number, object: GameItem){
+        let xDistance = xPos - object.xPosition;
+        let yDistance = yPos - object.yPosition;
 
         return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
     }

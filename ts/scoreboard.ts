@@ -1,5 +1,7 @@
 class Scoreboard {
-    constructor() {
-        
+    protected _Points: Number;
+
+    constructor(points: Number) {
+        this._Points = points;
     }
 }

@@ -44,12 +44,23 @@ var GameItem = (function () {
     });
     return GameItem;
 }());
+var booster = (function (_super) {
+    __extends(booster, _super);
+    function booster(radius, colour, xPosition, yPosition) {
+        if (xPosition === void 0) { xPosition = 0; }
+        if (yPosition === void 0) { yPosition = 0; }
+        return _super.call(this, radius, colour, xPosition, yPosition) || this;
+    }
+    return booster;
+}(GameItem));
 var Character = (function (_super) {
     __extends(Character, _super);
     function Character(radius, colour, xPosition, yPosition) {
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
-        return _super.call(this, radius, colour, xPosition, yPosition) || this;
+        var _this = _super.call(this, radius, colour, xPosition, yPosition) || this;
+        _this._health = 3;
+        return _this;
     }
     Object.defineProperty(Character.prototype, "SetPositionX", {
         set: function (xPos) {
@@ -65,6 +76,20 @@ var Character = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Character.prototype, "SetHealth", {
+        set: function (health) {
+            this._health = health;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Character.prototype, "health", {
+        get: function () {
+            return this._health;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Character.prototype.draw = function () {
         this.context.beginPath();
         this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
@@ -72,6 +97,11 @@ var Character = (function (_super) {
         this.context.fillStyle = this._colour;
         this.context.stroke();
         this.context.fill();
+    };
+    Character.prototype.drawHealth = function () {
+        this.context.font = "30px Arial";
+        this.context.fillStyle = "#fff";
+        this.context.fillText("Lives: " + this._health, 10, 50);
     };
     return Character;
 }(GameItem));
@@ -122,7 +152,7 @@ var Game = (function () {
         var yPos = Math.random() * (innerHeight - radius * 2) + radius;
         var xVel = (Math.random() - 0.5) * 10;
         var yVel = (Math.random() - 0.5) * 10;
-        if (this.distance(xPos, yPos) < radius + this._player.radius + 30) {
+        if (this.distance(xPos, yPos, this._player) < radius + this._player.radius + 30) {
             xPos = Math.random() * (innerWidth - radius * 2) + radius;
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
@@ -137,11 +167,24 @@ var Game = (function () {
             projectile.draw();
             projectile.update();
         });
+        this.checkCollision();
+        this._player.drawHealth();
         this._player.draw();
     };
-    Game.prototype.distance = function (xPos, yPos) {
-        var xDistance = xPos - this._player.xPosition;
-        var yDistance = yPos - this._player.yPosition;
+    Game.prototype.checkCollision = function () {
+        var _this = this;
+        this._projectiles.map(function (projectile, index) {
+            var distance = _this.distance(projectile.xPosition, projectile.yPosition, _this._player);
+            if (distance < projectile.radius + _this._player.radius) {
+                console.log("Collision");
+                _this._projectiles.splice(index, 1);
+                _this._player.SetHealth = _this._player.health - 1;
+            }
+        });
+    };
+    Game.prototype.distance = function (xPos, yPos, object) {
+        var xDistance = xPos - object.xPosition;
+        var yDistance = yPos - object.yPosition;
         return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
     };
     return Game;
@@ -186,7 +229,8 @@ var Projectile = (function (_super) {
     return Projectile;
 }(GameItem));
 var Scoreboard = (function () {
-    function Scoreboard() {
+    function Scoreboard(points) {
+        this._Points = points;
     }
     return Scoreboard;
 }());
