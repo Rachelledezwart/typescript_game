@@ -3,7 +3,9 @@ class Game {
     private context: CanvasRenderingContext2D = this.canvas.getContext('2d');
     
     private _projectiles: Array<Projectile>;
+    //private _boosters: Array<booster>;
     private _player: Character; 
+    private _score: Scoreboard; 
 
     private keys: Array<boolean> = [];
     
@@ -12,7 +14,9 @@ class Game {
 
         //create some gameItems
         this._projectiles = new Array(); 
+        //this._boosters = new Array(); 
         this._player = new Character(playerRadius, "#912F40", window.innerWidth / 2 - playerRadius / 2, window.innerHeight / 2 - playerRadius / 2);
+        this._score = new Scoreboard(0);
 
         //add keydown handler to the window object
         window.addEventListener('keydown', (e) => {
@@ -76,16 +80,23 @@ class Game {
         let xVel = (Math.random() - 0.5) * 10;
         let yVel = (Math.random() - 0.5) * 10;
 
+        let currentScore = this._score.getScore;
+
         if(this.distance(xPos, yPos, this._player) < radius + this._player.radius + 30){
             xPos = Math.random() * (innerWidth - radius * 2) + radius;
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
 
         this._projectiles.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
+
+
+        this._score.setScore = currentScore += 1;
         
-        setTimeout(() => {
-            this.draw();
-        }, 5000);
+        if(this._player.health >= 0){
+            setTimeout(() => {
+                this.draw();
+            }, 5000);
+        }
     }
     
     /**
@@ -94,14 +105,24 @@ class Game {
     public update(): void {
         this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
         
-        this._projectiles.map((projectile) => {
-            projectile.draw();  
-            projectile.update();
-        });
-        
-        this.checkCollision();
-        this._player.drawHealth();
-        this._player.draw();
+        if(this._player.health >= 0){
+            this._projectiles.map((projectile) => {
+                projectile.draw();  
+                projectile.update();
+            });
+            
+            this.checkCollision();
+            this._player.drawHealth();
+            this._player.draw();
+            this._score.draw();
+        } else {
+            let score = this._score.getScore; 
+
+            this.context.textBaseline = "middle"; 
+            this.context.font = "30px 'Lato'";
+            this.context.fillText("Game Over!", innerWidth / 2 - 75, innerHeight / 2 - 25); 
+            this.context.fillText("score: " + score, innerWidth / 2 - 50, innerHeight / 2 + 25); 
+        }
     }
 
     public checkCollision(){
@@ -122,5 +143,9 @@ class Game {
         let yDistance = yPos - object.yPosition;
 
         return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+    }
+
+    public checkTextLength(txt: string){
+        this.context.measureText(txt).width;
     }
 }

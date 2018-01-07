@@ -1,6 +1,7 @@
 /// <reference path="gameItem.ts" />
 
 class Projectile extends GameItem {
+    private _radius: number;
     private _xVel: number;
     private _yVel: number;
 
@@ -10,14 +11,15 @@ class Projectile extends GameItem {
     * @param {number} - xPosition
     * @param {number} - yPosition
     */
-    constructor(radius:number, colour: string, xPosition: number = 0, yPosition: number = 0, xVelocity: number, yVelocity: number) {
-        super(radius, colour, xPosition, yPosition);
+    constructor(radius:number = 10, colour: string, xPosition: number = 0, yPosition: number = 0, xVelocity: number, yVelocity: number) {
+        super(colour, xPosition, yPosition);
+        this._radius = radius;
         this._xVel = xVelocity; 
         this._yVel = yVelocity;
     }
     
     /**
-    * Function to draw the initial state of the gameItem
+    * Function to draw the initial state of the projectile
     * @param {HTMLElement} - container
     */
     public draw(): void {
@@ -27,8 +29,12 @@ class Projectile extends GameItem {
         this.context.stroke();
     }
 
+    public get radius(){
+        return this._radius;
+    }
+
     /**
-    * Function to update the state of the GameItem in the DOM
+    * Function to update the state of the projectile in the DOM
     */    
     public update(): void {
         if(this._xPos + this._radius > innerWidth || this._xPos - this._radius < 0){
