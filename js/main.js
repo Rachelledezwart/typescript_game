@@ -202,8 +202,8 @@ var Game = (function () {
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
         this._projectiles.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
-        this._score.setScore = currentScore += 1;
-        if (this._player.health >= 0) {
+        if (this._player.health > 0) {
+            this._score.setScore = currentScore += 1;
             setTimeout(function () {
                 _this.draw();
             }, 5000);
@@ -226,7 +226,7 @@ var Game = (function () {
             this.context.textBaseline = "middle";
             this.context.font = "30px 'Lato'";
             this.context.fillText("Game Over!", innerWidth / 2 - 75, innerHeight / 2 - 25);
-            this.context.fillText("score: " + score, innerWidth / 2 - 50, innerHeight / 2 + 25);
+            this.context.fillText("score: " + score, innerWidth / 2 - 55, innerHeight / 2 + 25);
         }
     };
     Game.prototype.checkCollision = function () {
