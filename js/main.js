@@ -9,12 +9,13 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var GameItem = (function () {
-    function GameItem(colour, xPosition, yPosition) {
+    function GameItem(radius, colour, xPosition, yPosition) {
         if (colour === void 0) { colour = '#5E0028'; }
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
         this.canvas = document.querySelector('canvas');
         this.context = this.canvas.getContext('2d');
+        this._radius = radius;
         this._colour = colour;
         this._xPos = xPosition;
         this._yPos = yPosition;
@@ -33,6 +34,13 @@ var GameItem = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(GameItem.prototype, "radius", {
+        get: function () {
+            return this._radius;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return GameItem;
 }());
 var Booster = (function (_super) {
@@ -40,38 +48,13 @@ var Booster = (function (_super) {
     function Booster(name, radius, colour, xPosition, yPosition) {
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
-        var _this = _super.call(this, colour, xPosition, yPosition) || this;
+        var _this = _super.call(this, radius, colour, xPosition, yPosition) || this;
         _this._name = name;
-        _this._radius = radius;
         return _this;
     }
-    Object.defineProperty(Booster.prototype, "currentSpawn", {
-        get: function () {
-            return this._currentSpawn;
-        },
-        set: function (current) {
-            this._currentSpawn = current;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Booster.prototype, "name", {
         get: function () {
             return this._name;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Booster.prototype, "points", {
-        get: function () {
-            return this._points;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Booster.prototype, "radius", {
-        get: function () {
-            return this._radius;
         },
         enumerable: true,
         configurable: true
@@ -92,8 +75,7 @@ var Character = (function (_super) {
         if (radius === void 0) { radius = 10; }
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
-        var _this = _super.call(this, colour, xPosition, yPosition) || this;
-        _this._radius = radius;
+        var _this = _super.call(this, radius, colour, xPosition, yPosition) || this;
         _this._health = 3;
         return _this;
     }
@@ -121,13 +103,6 @@ var Character = (function (_super) {
     Object.defineProperty(Character.prototype, "health", {
         get: function () {
             return this._health;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Character.prototype, "radius", {
-        get: function () {
-            return this._radius;
         },
         enumerable: true,
         configurable: true
@@ -197,7 +172,7 @@ var Game = (function () {
         var xVel = (Math.random() - 0.5) * 10;
         var yVel = (Math.random() - 0.5) * 10;
         var currentScore = this._score.getScore;
-        if (this.distance(xPos, yPos, this._player) < radius + this._player.radius + 30) {
+        if (this.Distance(xPos, yPos, this._player) < radius + this._player.radius + 30) {
             xPos = Math.random() * (innerWidth - radius * 2) + radius;
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
@@ -232,8 +207,8 @@ var Game = (function () {
             this._boosters.map(function (booster) {
                 booster.draw();
             });
-            this.checkCollisionProjectile();
-            this.checkCollisionBooster();
+            this.CheckCollisionProjectile();
+            this.CheckCollisionBooster();
             this._player.drawHealth();
             this._player.draw();
             this._score.draw();
@@ -246,10 +221,10 @@ var Game = (function () {
             this.context.fillText("score: " + score, innerWidth / 2 - 55, innerHeight / 2 + 25);
         }
     };
-    Game.prototype.checkCollisionProjectile = function () {
+    Game.prototype.CheckCollisionProjectile = function () {
         var _this = this;
         this._projectiles.map(function (projectile, index) {
-            var distance = _this.distance(projectile.xPosition, projectile.yPosition, _this._player);
+            var distance = _this.Distance(projectile.xPosition, projectile.yPosition, _this._player);
             if (distance < projectile.radius + _this._player.radius) {
                 console.log("Collision");
                 _this._projectiles.splice(index, 1);
@@ -257,10 +232,10 @@ var Game = (function () {
             }
         });
     };
-    Game.prototype.checkCollisionBooster = function () {
+    Game.prototype.CheckCollisionBooster = function () {
         var _this = this;
         this._boosters.map(function (booster, index) {
-            var distance = _this.distance(booster.xPosition, booster.yPosition, _this._player);
+            var distance = _this.Distance(booster.xPosition, booster.yPosition, _this._player);
             if (distance < booster.radius + _this._player.radius) {
                 console.log("Collision Booster!");
                 if (booster.name === "health") {
@@ -274,13 +249,10 @@ var Game = (function () {
             }
         });
     };
-    Game.prototype.distance = function (xPos, yPos, object) {
+    Game.prototype.Distance = function (xPos, yPos, object) {
         var xDistance = xPos - object.xPosition;
         var yDistance = yPos - object.yPosition;
         return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-    };
-    Game.prototype.checkTextLength = function (txt) {
-        this.context.measureText(txt).width;
     };
     return Game;
 }());
@@ -297,25 +269,21 @@ var Projectile = (function (_super) {
         if (radius === void 0) { radius = 10; }
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
-        var _this = _super.call(this, colour, xPosition, yPosition) || this;
-        _this._radius = radius;
+        var _this = _super.call(this, radius, colour, xPosition, yPosition) || this;
         _this._xVel = xVelocity;
         _this._yVel = yVelocity;
         return _this;
     }
+    Projectile.prototype.bounce = function () {
+        this._xVel = -this._xVel;
+        this._yVel = -this._yVel;
+    };
     Projectile.prototype.draw = function () {
         this.context.beginPath();
         this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
         this.context.strokeStyle = this._colour;
         this.context.stroke();
     };
-    Object.defineProperty(Projectile.prototype, "radius", {
-        get: function () {
-            return this._radius;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Projectile.prototype.update = function () {
         if (this._xPos + this._radius > innerWidth || this._xPos - this._radius < 0) {
             this._xVel = -this._xVel;
@@ -325,10 +293,6 @@ var Projectile = (function (_super) {
         }
         this._xPos += this._xVel;
         this._yPos += this._yVel;
-    };
-    Projectile.prototype.bounce = function () {
-        this._xVel = -this._xVel;
-        this._yVel = -this._yVel;
     };
     return Projectile;
 }(GameItem));
@@ -359,10 +323,5 @@ var Scoreboard = (function () {
         this.context.fillText("Score: " + this._points, window.innerWidth - 175, 50);
     };
     return Scoreboard;
-}());
-var Timer = (function () {
-    function Timer() {
-    }
-    return Timer;
 }());
 //# sourceMappingURL=main.js.map

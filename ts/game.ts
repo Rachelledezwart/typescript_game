@@ -82,7 +82,7 @@ class Game {
 
         let currentScore = this._score.getScore;
 
-        if(this.distance(xPos, yPos, this._player) < radius + this._player.radius + 30){
+        if(this.Distance(xPos, yPos, this._player) < radius + this._player.radius + 30){
             xPos = Math.random() * (innerWidth - radius * 2) + radius;
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
@@ -127,8 +127,8 @@ class Game {
                 booster.draw();
             })
             
-            this.checkCollisionProjectile();
-            this.checkCollisionBooster();
+            this.CheckCollisionProjectile();
+            this.CheckCollisionBooster();
             this._player.drawHealth();
             this._player.draw();
             this._score.draw();
@@ -142,9 +142,9 @@ class Game {
         }
     }
 
-    public checkCollisionProjectile(){
+    public CheckCollisionProjectile(){
         this._projectiles.map((projectile, index) => {
-            let distance = this.distance(projectile.xPosition, projectile.yPosition, this._player);
+            let distance = this.Distance(projectile.xPosition, projectile.yPosition, this._player);
 
             if(distance < projectile.radius + this._player.radius){
                 console.log("Collision");
@@ -155,9 +155,9 @@ class Game {
         });
     }
 
-    public checkCollisionBooster(){
+    public CheckCollisionBooster(){
         this._boosters.map((booster, index) => {
-            let distance = this.distance(booster.xPosition, booster.yPosition, this._player);
+            let distance = this.Distance(booster.xPosition, booster.yPosition, this._player);
 
             if(distance < booster.radius + this._player.radius){
                 console.log("Collision Booster!");
@@ -172,14 +172,10 @@ class Game {
         });
     }
     
-    public distance(xPos: number, yPos: number, object: GameItem){
+    public Distance(xPos: number, yPos: number, object: GameItem){
         let xDistance = xPos - object.xPosition;
         let yDistance = yPos - object.yPosition;
 
         return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-    }
-
-    public checkTextLength(txt: string){
-        this.context.measureText(txt).width;
     }
 }

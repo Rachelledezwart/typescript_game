@@ -3,6 +3,7 @@ class GameItem {
     protected context: CanvasRenderingContext2D = this.canvas.getContext('2d');
 
     //attr
+    protected _radius: number;
     protected _colour: string;
     protected _xPos: number;
     protected _yPos: number;
@@ -13,7 +14,8 @@ class GameItem {
     * @param {number} - xPosition
     * @param {number} - yPosition
     */
-    constructor(colour: string = '#5E0028', xPosition: number = 0, yPosition: number = 0) {
+    constructor(radius: number, colour: string = '#5E0028', xPosition: number = 0, yPosition: number = 0) {
+        this._radius = radius;
         this._colour = colour;
         this._xPos = xPosition;
         this._yPos = yPosition;
@@ -25,5 +27,9 @@ class GameItem {
 
     public get yPosition(){
         return this._yPos;
+    }
+
+    public get radius(){
+        return this._radius;
     }
 }

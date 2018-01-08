@@ -1,7 +1,6 @@
 /// <reference path="gameItem.ts" />
 
 class Character extends GameItem {
-    private _radius: number;
     private _health: number; 
     
     /**
@@ -11,8 +10,7 @@ class Character extends GameItem {
     * @param {number} - yPosition
     */
     constructor(radius:number = 10, colour: string, xPosition: number = 0, yPosition: number = 0) {
-        super(colour, xPosition, yPosition);
-        this._radius = radius;
+        super(radius, colour, xPosition, yPosition);
         this._health = 3;
     }
 
@@ -30,10 +28,6 @@ class Character extends GameItem {
 
     public get health() {
         return this._health;
-    }
-    
-    public get radius() {
-        return this._radius;
     }
         
     /**
