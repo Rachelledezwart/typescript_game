@@ -6,12 +6,10 @@ class Booster extends GameItem{
     private _currentSpawn: number;
     private _maxSpawn: number; 
 
-    constructor(name: string, radius:number, colour: string, xPosition: number = 0, yPosition: number = 0, currentSpawnTime: number = 0, maxSpawnTime: number) {
+    constructor(name: string, radius:number, colour: string, xPosition: number = 0, yPosition: number = 0) {
         super(colour, xPosition, yPosition);
         this._name = name;
         this._radius = radius; 
-        this._currentSpawn = currentSpawnTime; 
-        this._maxSpawn = maxSpawnTime; 
     }
 
     public set currentSpawn(current){

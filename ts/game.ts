@@ -95,10 +95,10 @@ class Game {
 
         if(spawnNumber > 2){
            if(spawnKind == 1){
-                this._boosters.push(new Booster("health", 10, "#3CB371", xPos, yPos, 0, 10));
+                this._boosters.push(new Booster("health", 10, "#3CB371", xPos, yPos));
                 console.log("spawned");
             } else {
-                this._boosters.push(new Booster("bonus", 10, "#20B2AA", xPos, yPos, 0, 10));
+                this._boosters.push(new Booster("bonus", 10, "#20B2AA", xPos, yPos));
                 console.log("spawned 2");
             }
         }

@@ -37,15 +37,12 @@ var GameItem = (function () {
 }());
 var Booster = (function (_super) {
     __extends(Booster, _super);
-    function Booster(name, radius, colour, xPosition, yPosition, currentSpawnTime, maxSpawnTime) {
+    function Booster(name, radius, colour, xPosition, yPosition) {
         if (xPosition === void 0) { xPosition = 0; }
         if (yPosition === void 0) { yPosition = 0; }
-        if (currentSpawnTime === void 0) { currentSpawnTime = 0; }
         var _this = _super.call(this, colour, xPosition, yPosition) || this;
         _this._name = name;
         _this._radius = radius;
-        _this._currentSpawn = currentSpawnTime;
-        _this._maxSpawn = maxSpawnTime;
         return _this;
     }
     Object.defineProperty(Booster.prototype, "currentSpawn", {
@@ -210,11 +207,11 @@ var Game = (function () {
         var spawnTime = Math.floor(Math.random() * (20 - 3 + 1)) + 3;
         if (spawnNumber > 2) {
             if (spawnKind == 1) {
-                this._boosters.push(new Booster("health", 10, "#3CB371", xPos, yPos, 0, 10));
+                this._boosters.push(new Booster("health", 10, "#3CB371", xPos, yPos));
                 console.log("spawned");
             }
             else {
-                this._boosters.push(new Booster("bonus", 10, "#20B2AA", xPos, yPos, 0, 10));
+                this._boosters.push(new Booster("bonus", 10, "#20B2AA", xPos, yPos));
                 console.log("spawned 2");
             }
         }
