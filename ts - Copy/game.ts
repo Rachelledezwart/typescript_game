@@ -3,7 +3,8 @@ class Game {
     private context: CanvasRenderingContext2D = this.canvas.getContext('2d');
     
     private _projectiles: Array<Projectile>;
-    private _boosters: Array<Booster>;
+    //private _boosters: Array<booster>;
+    private _booster: Booster;
     private _player: Character; 
     private _score: Scoreboard; 
 
@@ -14,9 +15,10 @@ class Game {
 
         //create some gameItems
         this._projectiles = new Array(); 
-        this._boosters = new Array(); 
+        //this._boosters = new Array(); 
         this._player = new Character(playerRadius, "#912F40", window.innerWidth / 2 - playerRadius / 2, window.innerHeight / 2 - playerRadius / 2);
         this._score = new Scoreboard(0);
+        this._booster = new Booster("health", 10, "green", 10, 50, 1, 10);
 
         //add keydown handler to the window object
         window.addEventListener('keydown', (e) => {
@@ -89,21 +91,9 @@ class Game {
 
         this._projectiles.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
 
-        let spawnNumber = Math.floor(Math.random() * (3 - 0 + 1)) + 0;
-        let spawnKind = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
-        let spawnTime = Math.floor(Math.random() * (20 - 3 + 1)) + 3;
-
-        if(spawnNumber > 2){
-           if(spawnKind == 1){
-                this._boosters.push(new Booster("health", 10, "#3CB371", xPos, yPos, 0, 10));
-                console.log("spawned");
-            } else {
-                this._boosters.push(new Booster("bonus", 10, "#20B2AA", xPos, yPos, 0, 10));
-                console.log("spawned 2");
-            }
-        }
+        this._booster.draw();
         
-        if(this._player.health >= 0){
+        if(this._player.health > 0){
             this._score.setScore = currentScore += 1;
             setTimeout(() => {
                 this.draw();
@@ -122,13 +112,8 @@ class Game {
                 projectile.draw();  
                 projectile.update();
             });
-
-            this._boosters.map((booster) => {
-                booster.draw();
-            })
             
-            this.checkCollisionProjectile();
-            this.checkCollisionBooster();
+            this.checkCollision();
             this._player.drawHealth();
             this._player.draw();
             this._score.draw();
@@ -142,7 +127,7 @@ class Game {
         }
     }
 
-    public checkCollisionProjectile(){
+    public checkCollision(){
         this._projectiles.map((projectile, index) => {
             let distance = this.distance(projectile.xPosition, projectile.yPosition, this._player);
 
@@ -152,23 +137,6 @@ class Game {
                 this._player.SetHealth = this._player.health - 1; 
             }
 
-        });
-    }
-
-    public checkCollisionBooster(){
-        this._boosters.map((booster, index) => {
-            let distance = this.distance(booster.xPosition, booster.yPosition, this._player);
-
-            if(distance < booster.radius + this._player.radius){
-                console.log("Collision Booster!");
-                if(booster.name === "health"){
-                    this._player.SetHealth = this._player.health + 1; 
-                    this._score.setScore = this._score.getScore + 5; 
-                } else if(booster.name === "bonus"){
-                    this._score.setScore = this._score.getScore + 10; 
-                }
-                this._boosters.splice(index, 1);
-            }
         });
     }
     

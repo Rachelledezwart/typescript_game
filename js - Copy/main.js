@@ -80,11 +80,11 @@ var Booster = (function (_super) {
         configurable: true
     });
     Booster.prototype.draw = function () {
-        this.context.beginPath();
-        this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
-        this.context.strokeStyle = this._colour;
-        this.context.fillStyle = this._colour;
-        this.context.stroke();
+        var gradient = this.context.createRadialGradient(this._xPos, this._yPos, 50, this._xPos, this._yPos, 25);
+        gradient.addColorStop(0, 'pink');
+        gradient.addColorStop(1, 'transparent');
+        this.context.arc(this._xPos, this._yPos, this._radius, 0, 2 * Math.PI);
+        this.context.fillStyle = gradient;
         this.context.fill();
     };
     return Booster;
@@ -175,9 +175,9 @@ var Game = (function () {
         };
         var playerRadius = 20;
         this._projectiles = new Array();
-        this._boosters = new Array();
         this._player = new Character(playerRadius, "#912F40", window.innerWidth / 2 - playerRadius / 2, window.innerHeight / 2 - playerRadius / 2);
         this._score = new Scoreboard(0);
+        this._booster = new Booster("health", 10, "green", 10, 50, 1, 10);
         window.addEventListener('keydown', function (e) {
             _this.keys[e.keyCode] = true;
         });
@@ -205,20 +205,8 @@ var Game = (function () {
             yPos = Math.random() * (innerHeight - radius * 2) + radius;
         }
         this._projectiles.push(new Projectile(radius, '#FFF', xPos, yPos, xVel, yVel));
-        var spawnNumber = Math.floor(Math.random() * (3 - 0 + 1)) + 0;
-        var spawnKind = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
-        var spawnTime = Math.floor(Math.random() * (20 - 3 + 1)) + 3;
-        if (spawnNumber > 2) {
-            if (spawnKind == 1) {
-                this._boosters.push(new Booster("health", 10, "#3CB371", xPos, yPos, 0, 10));
-                console.log("spawned");
-            }
-            else {
-                this._boosters.push(new Booster("bonus", 10, "#20B2AA", xPos, yPos, 0, 10));
-                console.log("spawned 2");
-            }
-        }
-        if (this._player.health >= 0) {
+        this._booster.draw();
+        if (this._player.health > 0) {
             this._score.setScore = currentScore += 1;
             setTimeout(function () {
                 _this.draw();
@@ -232,11 +220,7 @@ var Game = (function () {
                 projectile.draw();
                 projectile.update();
             });
-            this._boosters.map(function (booster) {
-                booster.draw();
-            });
-            this.checkCollisionProjectile();
-            this.checkCollisionBooster();
+            this.checkCollision();
             this._player.drawHealth();
             this._player.draw();
             this._score.draw();
@@ -249,7 +233,7 @@ var Game = (function () {
             this.context.fillText("score: " + score, innerWidth / 2 - 55, innerHeight / 2 + 25);
         }
     };
-    Game.prototype.checkCollisionProjectile = function () {
+    Game.prototype.checkCollision = function () {
         var _this = this;
         this._projectiles.map(function (projectile, index) {
             var distance = _this.distance(projectile.xPosition, projectile.yPosition, _this._player);
@@ -257,23 +241,6 @@ var Game = (function () {
                 console.log("Collision");
                 _this._projectiles.splice(index, 1);
                 _this._player.SetHealth = _this._player.health - 1;
-            }
-        });
-    };
-    Game.prototype.checkCollisionBooster = function () {
-        var _this = this;
-        this._boosters.map(function (booster, index) {
-            var distance = _this.distance(booster.xPosition, booster.yPosition, _this._player);
-            if (distance < booster.radius + _this._player.radius) {
-                console.log("Collision Booster!");
-                if (booster.name === "health") {
-                    _this._player.SetHealth = _this._player.health + 1;
-                    _this._score.setScore = _this._score.getScore + 5;
-                }
-                else if (booster.name === "bonus") {
-                    _this._score.setScore = _this._score.getScore + 10;
-                }
-                _this._boosters.splice(index, 1);
             }
         });
     };

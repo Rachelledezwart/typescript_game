@@ -39,11 +39,14 @@ class Booster extends GameItem{
     * @param {HTMLElement} - container
     */
     public draw(): void {        
-        this.context.beginPath();
-        this.context.arc(this._xPos, this._yPos, this._radius, 0, Math.PI * 2, false);
-        this.context.strokeStyle = this._colour;
-        this.context.fillStyle = this._colour;
-        this.context.stroke(); 
+        let gradient = this.context.createRadialGradient(this._xPos, this._yPos, 50, this._xPos, this._yPos, 25);
+
+        gradient.addColorStop(0, 'pink');
+        gradient.addColorStop(1, 'transparent');
+    
+        this.context.arc(this._xPos, this._yPos, this._radius, 0, 2 * Math.PI);
+    
+        this.context.fillStyle = gradient;
         this.context.fill();
     }
 
