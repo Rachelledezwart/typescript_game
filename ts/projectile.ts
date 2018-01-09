@@ -1,6 +1,7 @@
 /// <reference path="gameItem.ts" />
 
 class Projectile extends GameItem {
+    //attr
     private _xVel: number;
     private _yVel: number;
 
@@ -16,6 +17,9 @@ class Projectile extends GameItem {
         this._yVel = yVelocity;
     }
     
+    /**
+    * Function to bounce the orbs back once they hit the side of the canvas
+    */
     public bounce(): void{
         this._xVel = -this._xVel;
         this._yVel = -this._yVel;

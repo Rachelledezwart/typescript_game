@@ -1,11 +1,13 @@
 /// <reference path="gameItem.ts" />
 
 class Character extends GameItem {
+    //attr
     private _health: number; 
     
     /**
     * Function to create the Character
     * @param {string} - name
+    * @param {number} - colour
     * @param {number} - xPosition
     * @param {number} - yPosition
     */
@@ -14,24 +16,39 @@ class Character extends GameItem {
         this._health = 3;
     }
 
+    /**
+    * Function to set the x position
+    * @param {number} - xPos
+    */
     public set SetPositionX(xPos: number) {
         this._xPos = xPos;
     }
 
+    /**
+    * Function to set the y position
+    * @param {number} - yPos
+    */
     public set SetPositionY(yPos: number) {
         this._yPos = yPos;
     }
 
+    /**
+    * Function to set the health
+    * @param {number} - health
+    */
     public set SetHealth(health: number) {
         this._health = health;
     }
 
+    /**
+    * Function to get the health
+    */
     public get health() {
         return this._health;
     }
         
     /**
-    * Function to update the state of the GameItem in the DOM
+    * Function to draw the state of the Character in the DOM
     */    
     public draw(): void {
         this.context.beginPath();
@@ -42,6 +59,9 @@ class Character extends GameItem {
         this.context.fill();
     }
 
+    /**
+    * Function to draw the state of the health in the DOM
+    */   
     public drawHealth(): void {
         this.context.font = "30px 'Lato'";
         this.context.fillStyle = "#fff";

@@ -21,14 +21,23 @@ class GameItem {
         this._yPos = yPosition;
     }
 
+    /**
+    * Function to get x position of the game item
+    */
     public get xPosition(){
         return this._xPos;
     }
 
+    /**
+    * Function to get y position of the gameItem
+    */
     public get yPosition(){
         return this._yPos;
     }
 
+    /**
+    * Function to get radius of the gameItem
+    */
     public get radius(){
         return this._radius;
     }

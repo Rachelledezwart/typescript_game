@@ -2,11 +2,22 @@
 class Booster extends GameItem{
     private _name: string; 
 
+    /**
+    * Function to create the booster
+    * @param {string} - name
+    * @param {number} - radius
+    * @param {string} - colour
+    * @param {number} - xPosition
+    * @param {number} - yPosition
+    */
     constructor(name: string, radius:number, colour: string, xPosition: number = 0, yPosition: number = 0) {
         super(radius, colour, xPosition, yPosition);
         this._name = name;
     }
 
+    /**
+    * Function to get the name of the booster
+    */
     public get name(){
         return this._name;
     }

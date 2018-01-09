@@ -2,13 +2,17 @@ class Game {
     private canvas = <HTMLCanvasElement> document.querySelector('canvas');
     private context: CanvasRenderingContext2D = this.canvas.getContext('2d');
     
+    //attr
     private _projectiles: Array<Projectile>;
     private _boosters: Array<Booster>;
     private _player: Character; 
     private _score: Scoreboard; 
 
     private keys: Array<boolean> = [];
-    
+
+    /**
+    * Function to create the Game
+    */
     constructor(){
         let playerRadius: number = 20;
 
@@ -37,6 +41,10 @@ class Game {
         this.gameLoop();
     }
 
+
+    /**
+    * Function that loops continuously to update the canvas and checks the key input
+    */
     public gameLoop = (): void => {
         requestAnimationFrame(this.gameLoop);
 
@@ -63,6 +71,9 @@ class Game {
         
     }
 
+    /**
+    * Function changes the size of the canvas to the size of the browser
+    */
     public setCanvasSize(): void{
         this.canvas.width = document.body.clientWidth; //document.width is obsolete
         this.canvas.height = document.body.clientHeight; //document.height is obsolete
@@ -141,7 +152,10 @@ class Game {
             this.context.fillText("score: " + score, innerWidth / 2 - 55, innerHeight / 2 + 25); 
         }
     }
-
+    
+    /**
+    * Function to check if the projectile collides with the player
+    */
     public CheckCollisionProjectile(){
         this._projectiles.map((projectile, index) => {
             let distance = this.Distance(projectile.xPosition, projectile.yPosition, this._player);
@@ -155,6 +169,9 @@ class Game {
         });
     }
 
+    /**
+    * Function to check if the booster collides with the player
+    */
     public CheckCollisionBooster(){
         this._boosters.map((booster, index) => {
             let distance = this.Distance(booster.xPosition, booster.yPosition, this._player);
@@ -171,7 +188,13 @@ class Game {
             }
         });
     }
-    
+
+    /**
+    * Function to check the distance of the given object to the distance of the player 
+    * @param {number} - xPos
+    * @param {number} - yPos
+    * @param {GameItem} - object
+    */
     public Distance(xPos: number, yPos: number, object: GameItem){
         let xDistance = xPos - object.xPosition;
         let yDistance = yPos - object.yPosition;
