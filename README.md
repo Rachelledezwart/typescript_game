@@ -1,7 +1,6 @@
 Rocinante 
 
-Bitbucked: 
-https://bitbucket.org/RdeZwart/typescript_game_2
+Spel gemaakt in het eerste jaar van de opleiding HBO-ICT. Gemaakt doormiddel van Typscript en Canvas. 
 
 Online version: 
 http://rocinante.rachelledezwart.nl/
